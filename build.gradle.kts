@@ -17,7 +17,7 @@ version = "1.0-SNAPSHOT"
 
 val testServerDir: String by project
 
-val useRcon: Boolean by project
+val useRcon: String by project
 val rconAddress: String? by project
 val rconPassword: String? by project
 val preCopyCommands: String? by project
@@ -51,6 +51,8 @@ task("fatJar", type = Jar::class) {
 task("testJar") {
     val fatJar = tasks.getByName("fatJar") as Jar
     dependsOn(fatJar)
+
+    val useRcon = useRcon.toBoolean()
 
 
     if(!fatJar.archiveFile.get().asFile.exists()) return@task
