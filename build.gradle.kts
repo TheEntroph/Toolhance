@@ -1,3 +1,4 @@
+import nl.vv32.rcon.Rcon
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -5,10 +6,22 @@ plugins {
     kotlin("plugin.serialization") version "1.7.20"
 }
 
+buildscript {
+    dependencies {
+        classpath("nl.vv32.rcon:rcon:1.2.0")
+    }
+}
+
 group = "com.github.devlaq.toolhance"
 version = "1.0-SNAPSHOT"
 
 val testServerDir: String by project
+
+val useRcon: Boolean by project
+val rconAddress: String? by project
+val rconPassword: String? by project
+val preCopyCommands: String? by project
+val postCopyCommands: String? by project
 
 repositories {
     mavenCentral()
@@ -38,8 +51,30 @@ task("fatJar", type = Jar::class) {
 task("testJar") {
     val fatJar = tasks.getByName("fatJar") as Jar
     dependsOn(fatJar)
+
+
     if(!fatJar.archiveFile.get().asFile.exists()) return@task
+    var rcon: Rcon? = null
+    if(useRcon && rconAddress != null) {
+        try {
+            println("[RCON] Init...")
+            rcon = Rcon.open(rconAddress!!.substringBeforeLast(":"), rconAddress!!.substringAfterLast(":").toInt())
+            rcon.authenticate(rconPassword)
+        } catch (e: Exception) {
+            System.err.println("[RCON] Failed to connect to the server: ${e.localizedMessage}")
+        }
+    }
+    if(useRcon && preCopyCommands != null && rcon != null) {
+        val commands = preCopyCommands!!.split(";")
+        println("[RCON] Running pre-copy commands: [${commands.joinToString(", ")}]")
+        commands.forEach { rcon.sendCommand(it) }
+    }
     val destFile = File("$testServerDir/plugins/Toolhance-TEST.jar")
+    if(useRcon && postCopyCommands != null && rcon != null) {
+        val commands = postCopyCommands!!.split(";")
+        println("[RCON] Running post-copy commands: [${commands.joinToString(", ")}]")
+        commands.forEach { rcon.sendCommand(it) }
+    }
     doLast {
         tasks.jar.get().archiveFile.get().asFile.copyTo(destFile, overwrite = true)
     }
