@@ -2,6 +2,7 @@ package com.github.devlaq.toolhance.command
 
 import com.github.devlaq.toolhance.ui.ToolhanceUI
 import io.github.monun.kommand.PluginKommand
+import net.axay.kspigot.gui.openGUI
 import org.bukkit.inventory.Inventory
 
 object TestUICommand {
@@ -12,7 +13,17 @@ object TestUICommand {
 
             then("toolhance") {
                 executes {
-                    ToolhanceUI.showUI(player)
+                    player.openGUI(ToolhanceUI.gui)
+                }
+                then("success") {
+                    executes {
+                        player.openGUI(ToolhanceUI.successGui)
+                    }
+                }
+                then("fail") {
+                    executes {
+                        player.openGUI(ToolhanceUI.failGui)
+                    }
                 }
             }
         }

@@ -4,5 +4,6 @@ main: com.github.devlaq.toolhance.Toolhance
 api-version: 1.19
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.7.20
+  - org.jetbrains.kotlin:kotlin-reflect:1.7.20
   - io.github.monun:kommand-core:3.0.0
-  - io.github.monun:invfx-core:3.2.0
+  - net.axay:kspigot:1.19.1

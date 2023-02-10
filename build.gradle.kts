@@ -34,10 +34,12 @@ dependencies {
     @Suppress("VulnerableLibrariesLocal")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("io.github.monun:kommand-api:3.0.0")
-    implementation("io.github.monun:invfx-api:3.2.0")
+
+    implementation("net.axay:kspigot:1.19.1")
 }
 
 task("fatJar", type = Jar::class) {
